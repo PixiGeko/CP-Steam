@@ -1,0 +1,6 @@
+/node_modules
+/.idea
+
+.coda.json
+.coda-credentials.json
+0.4.0
