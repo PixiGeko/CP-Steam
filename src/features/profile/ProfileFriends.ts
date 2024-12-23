@@ -31,10 +31,20 @@ export class ProfileFriendsFormula extends PackItem {
 						cacheTtlSecs: 60 * 10 // cache for 10 minutes
 					});
 
-					let friends = data.body?.friendslist?.friends;
+					let friendslist = data.body?.friendslist;
 
-					if (!friends?.length) {
-						throw new coda.UserVisibleError(`Can not find profile with id ${profileId}`);
+					if (!friendslist) {
+						throw new coda.UserVisibleError(`Can not fetch user\'s friends. Check the profile id, and be sure that the friends list is public.`);
+					}
+
+					let friends = [];
+
+					for (let friend of friendslist.friends) {
+						friends.push({
+							steamid: friend.steamid,
+							relationship: friend.relationship,
+							friend_since: friend.friend_since
+						});
 					}
 
 					return friends;
@@ -44,6 +54,57 @@ export class ProfileFriendsFormula extends PackItem {
 			}
 		});
 
+		pack.addSyncTable({
+			name: this.name(),
+			identityName: 'Friend',
+			schema: ProfileFriendsSchema,
+			connectionRequirement: coda.ConnectionRequirement.Required,
+			formula: {
+				name: 'FetchFriends',
+				description: 'Gets all friends',
+				parameters: [
+					profileIdParameter()
+				],
+				execute: async ([profileId], context) => {
+					profileId = cleanId(profileId);
+	
+					try {
+						let data = await context.fetcher.fetch({
+							method: 'GET',
+							url: coda.withQueryParams(
+								'https://api.steampowered.com/ISteamUser/GetFriendList/v0001', {
+									key: getToken('key', context),
+									steamid: profileId
+								}),
+							cacheTtlSecs: 60 * 10 // cache for 10 minutes
+						});
+	
+						let friendslist = data.body?.friendslist;
+	
+						if (!friendslist) {
+							throw new coda.UserVisibleError(`Can not fetch user\'s friends. Check the profile id, and be sure that the friends list is public.`);
+						}
+	
+						let friends = [];
+	
+						for (let friend of friendslist.friends) {
+							friends.push({
+								steamid: friend.steamid,
+								relationship: friend.relationship,
+								friend_since: friend.friend_since
+							});
+						}
+	
+						return {
+							result: friends
+						};
+					} catch (error) {
+						this.handleError(error);
+					}
+				}
+			}
+		});
+			
 		pack.addColumnFormat({
 			name: this.name(),
 			matchers: [ 
