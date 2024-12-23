@@ -12,8 +12,8 @@ export class ProfileFriendsFormula extends PackItem {
 			name: this.name(),
 			description: 'Get friends list from the specified profile. (Friends list must be public)',
 			connectionRequirement: coda.ConnectionRequirement.Required,
-			resultType: coda.ValueType.Object,
-			schema: ProfileFriendsSchema,
+			resultType: coda.ValueType.Array,
+			items: ProfileFriendsSchema,
 			parameters: [
 				profileIdParameter()
 			],
@@ -51,7 +51,6 @@ export class ProfileFriendsFormula extends PackItem {
 				} catch (error) {
 					this.handleError(error);
 				}
-
 			}
 		});
 
