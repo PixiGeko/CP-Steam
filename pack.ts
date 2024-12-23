@@ -10,6 +10,7 @@ import { ProfileDetailsFormula } from './src/features/profile/ProfileDetails';
 import { GameAchievementsFormula } from './src/features/game/GameAchievements';
 import { ProfileLevel } from './src/features/profile/ProfileLevel';
 import { GameSearch } from './src/features/game/GameSearch';
+import { ProfileFriendsFormula } from './src/features/profile/ProfileFriends';
 
 // create pack
 export const pack = coda.newPack();
@@ -38,6 +39,7 @@ register(new RecentlyPlayedGamesFormula());
 register(new WishListFormula());
 register(new GameAchievementsFormula());
 register(new ProfileLevel());
+register(new ProfileFriendsFormula());
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
