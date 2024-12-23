@@ -26,7 +26,7 @@ export class ProfileFriendsFormula extends PackItem {
 						url: coda.withQueryParams(
 							'https://api.steampowered.com/ISteamUser/GetFriendList/v0001', {
 								key: getToken('key', context),
-								steamids: profileId
+								steamid: profileId
 							}),
 						cacheTtlSecs: 60 * 10 // cache for 10 minutes
 					});
