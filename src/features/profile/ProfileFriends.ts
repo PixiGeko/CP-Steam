@@ -12,8 +12,8 @@ export class ProfileFriendsFormula extends PackItem {
 			name: this.name(),
 			description: 'Get friends list from the specified profile. (Friends list must be public)',
 			connectionRequirement: coda.ConnectionRequirement.Required,
-			resultType: coda.ValueType.Object,
-			schema: ProfileFriendsSchema,
+			resultType: coda.ValueType.Array,
+			items: ProfileFriendsSchema,
 			parameters: [
 				profileIdParameter()
 			],
@@ -31,21 +31,16 @@ export class ProfileFriendsFormula extends PackItem {
 						cacheTtlSecs: 60 * 10 // cache for 10 minutes
 					});
 
-					let profile = data.body?.friendslist?.friends;
+					let friends = data.body?.friendslist?.friends;
 
-					if (!profile) {
+					if (!friends?.length) {
 						throw new coda.UserVisibleError(`Can not find profile with id ${profileId}`);
 					}
 
-					return {
-						steam_id: profile.steamid,
-						relationship: profile.relationship,
-						friend_since: profile.friend_since,
-					};
+					return friends;
 				} catch (error) {
 					this.handleError(error);
 				}
-
 			}
 		});
 
