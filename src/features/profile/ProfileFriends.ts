@@ -31,17 +31,23 @@ export class ProfileFriendsFormula extends PackItem {
 						cacheTtlSecs: 60 * 10 // cache for 10 minutes
 					});
 
-					let profile = data.body?.friendslist?.friends;
+					let friendslist = data.body?.friendslist;
 
-					if (!profile) {
-						throw new coda.UserVisibleError(`Can not find profile with id ${profileId}`);
+					if (!friendslist) {
+						throw new coda.UserVisibleError(`Can not fetch user\'s friends. Check the profile id, and be sure that the friends list is public.`);
 					}
 
-					return {
-						steam_id: profile.steamid,
-						relationship: profile.relationship,
-						friend_since: profile.friend_since,
-					};
+					let friends = [];
+
+					for (let friend of friendslist.friends) {
+						friends.push({
+							steamid: friend.steamid,
+							relationship: friend.relationship,
+							friend_since: friend.friend_since
+						});
+					}
+
+					return friends;
 				} catch (error) {
 					this.handleError(error);
 				}
