@@ -3,7 +3,7 @@ import { profileIdParameter } from '../../parameters/Profile';
 import { PackItem } from '../PackItem';
 import { REGEX_PROFILE_ID } from '../../utils/regex';
 import { getToken } from '../../utils/token';
-import {ProfileFriendsSchema} from '../../schemas/profile/details/ProfileDetailsSchema';
+import {ProfileFriendsSchema} from '../../schemas/profile/friends/ProfileFriendsSchema';
 import {cleanId} from '../../utils/steam-id';
 
 export class ProfileFriendsFormula extends PackItem {
@@ -31,7 +31,7 @@ export class ProfileFriendsFormula extends PackItem {
 						cacheTtlSecs: 60 * 10 // cache for 10 minutes
 					});
 
-					let profile = data.body?.friendslist?.friends?;
+					let profile = data.body?.friendslist?.friends;
 
 					if (!profile) {
 						throw new coda.UserVisibleError(`Can not find profile with id ${profileId}`);
